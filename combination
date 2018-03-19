@@ -1,36 +1,51 @@
 #include <stdio.h>
 
-/*从5个元素中选取3个的所有组合，递归 */
+/*从5个元素中选取3个的组合，递归 */
 
-int recur(int* arr,int array_cnt,int* rest, int rest_cnt,int sel_cnt)	//index starts from 0
+#define N 5
+
+int recur(int* arr,int array_cnt,int start,int* rest, int rest_cnt,int sel_cnt)	//index starts from 0
 {
 	int i, j;
-	for (i = 0; i < array_cnt;i++){
-		rest[rest_cnt+1] = arr[i];//rest starts from 1
-		if (i != array_cnt-1){
-			arr[i] = arr[array_cnt-1];
+	int flag[N+1];
+	for (i = 0; i <= N; i++){
+		flag[i] = 0;
+	}
+	for (i = start; i < array_cnt; i++){
+		if (flag[i]){
+			continue;
 		}
+		//find 
+		if (rest_cnt + 1 == sel_cnt){
+			rest[rest_cnt + 1] = arr[i];
 
-		//end
-		if (rest_cnt+1==sel_cnt){
-			for (j = 1; j <= sel_cnt;j++)
-				printf("%d ",rest[j]);
+			for (j = 1; j <= sel_cnt; j++)
+				printf("%d ", rest[j]);
 			printf("\n");
-			return 1;
+			continue;
 		}
 
-		for (j = 0; j <array_cnt; j++)
+		//delete
+		int tmp = arr[i];
+		rest[rest_cnt+1] = arr[i];//rest starts from 1
+		flag[i] = 1;
+
+	/*	for (j = 0; j <array_cnt; j++)
 			printf("%d ", arr[j]);
 		printf("\t");
-		for (j = 1; j <= rest_cnt+1; j++)
+		for (j = 1; j <= rest_cnt + 1; j++)
 			printf("%d ", rest[j]);
-		printf("\n");
+		printf("\n");*/
 
-		recur(arr, array_cnt-1,rest,rest_cnt+1,sel_cnt);
+		recur(arr, array_cnt,i+1,rest,rest_cnt+1,sel_cnt);
 
-		if (i != array_cnt - 1){
-			arr[i] = rest[rest_cnt + 1];
-		}
+/*		for (j = 0; j <array_cnt; j++)
+			printf("%d ", arr[j]);
+		printf("\t");
+		for (j = 1; j <= rest_cnt; j++)
+			printf("%d ", rest[j]);
+		printf("\n");*/
+
 	}
 	return 0;
 }
@@ -48,7 +63,7 @@ int main(void)
 		int arr2[] = { 1, 2, 3, 4, 5 };
 		int rest[8];
 		int array_cnt = sizeof(arr2)/sizeof(int);
-		recur(arr2, array_cnt, rest, 0, 3);
+		recur(arr2, array_cnt, 0,rest, 0, 3);
 	}//test case
 	return 0; //Your program should return 0 on normal termination.
 }
